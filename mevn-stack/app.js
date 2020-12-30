@@ -3,6 +3,7 @@ var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 var bodyParser = require('body-parser');
+var mongoose = require('mongoose');
 
 var book = require('./routes/book');
 var app = express();
@@ -31,5 +32,12 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+app.set('view engine', 'html');
+
+mongoose.Promise = require('bluebird');
+mongoose.connect('mongodb://localhost/qc_blog', { useMongoClient: true, promiseLibrary: require('bluebird') })
+  .then(() =>  console.log('connection succesful'))
+  .catch((err) => console.error(err));
 
 module.exports = app;
